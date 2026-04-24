@@ -1,6 +1,6 @@
 {
   "name": "Free Log",
-  "short_name": "Logger",
+  "short_name": "Free Log",
   "start_url": "index.html",
   "display": "standalone",
   "background_color": "#000000",

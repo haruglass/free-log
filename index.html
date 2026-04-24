@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <title>Monthly Logger</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="icon.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <style>
+    :root { --bg: #000; --txt: #d1d1d1; --brd: #333; }
+    body, html { margin: 0; padding: 0; height: 100%; width: 100%; background: var(--bg); color: var(--txt); overflow: hidden; font-family: sans-serif; }
+    .app { display: flex; flex-direction: column; height: 100vh; }
+    textarea { flex: 1; background: var(--bg); color: var(--txt); border: none; padding: 20px; font-size: 18px; resize: none; outline: none; box-sizing: border-box; }
+    .footer { display: flex; border-top: 1px solid var(--brd); height: 70px; align-items: center; padding: 0 15px; background: #0a0a0a; }
+    #status { flex: 1; font-size: 12px; color: #888; }
+    button { background: none; border: 1px solid var(--brd); color: var(--txt); padding: 12px 25px; border-radius: 4px; font-size: 14px; }
+  </style>
+</head>
+<body>
+<div class="app">
+  <textarea id="msg" placeholder="入力..."></textarea>
+  <div class="footer">
+    <div id="status"></div>
+    <button onclick="send()">記録</button>
+  </div>
+</div>
+<script>
+  async function send() {
+    const text = document.getElementById('msg').value;
+    const btn = document.querySelector('button');
+    const status = document.getElementById('status');
+    const url = 'https://script.google.com/macros/s/AKfycbx-DPxfPdQpFtSBdTCnMtYxPBnkNWglp-vNq2hY4KTK3LadURzUxOPYw5DT09tnTMDPnQ/exec'; // ★ここを書き換える
+
+    if (!text) return;
+    btn.disabled = true;
+    status.innerText = "送信中...";
+
+    try {
+      await fetch(url, {
+        method: 'POST',
+        body: JSON.stringify({ text: text })
+      });
+      status.innerText = "完了";
+      document.getElementById('msg').value = "";
+    } catch (e) {
+      status.innerText = "エラー";
+    } finally {
+      btn.disabled = false;
+      setTimeout(() => { status.innerText = ""; }, 2000);
+    }
+  }
+</script>
+</body>
+</html>
